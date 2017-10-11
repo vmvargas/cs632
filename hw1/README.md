@@ -1,7 +1,5 @@
 # CS632 Deep Learning -  Assignment #1
 
-One Paragraph of project description goes here
-
 
 ## Part 1: Nearest Neighbor Classifier
 

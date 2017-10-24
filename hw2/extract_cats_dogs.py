@@ -1,4 +1,4 @@
-"""One-time script for extracting all the cat and dog images from CIFAR-10,
+""" One-time script for extracting all the cat and dog images from CIFAR-10,
 and creating training and validation sets.
 
 Before running, download the CIFAR-10 data using these commands:
@@ -14,7 +14,7 @@ from PIL import Image
 import os
 import sys
 
-np.random.seed(0)
+np.random.seed(2017)
 
 if not os.path.exists('cifar-10-batches-py'):
   print ("CIFAR-10 data not found. Did you remember to download it?")

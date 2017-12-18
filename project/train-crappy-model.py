@@ -13,8 +13,8 @@ import matplotlib.pyplot as plt
 from PIL import Image
 from keras import optimizers
 
-EPOCHS = 50
-BATCH_SIZE = 10
+EPOCHS = 15
+BATCH_SIZE = 15
 NUM_CLASSES = 3
 TEST_SIZE = 0.25
 TRAIN_SAMPLES = CONST.FRAMES_PER_VIDEO*NUM_CLASSES*(1-TEST_SIZE) #112

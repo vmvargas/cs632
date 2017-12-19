@@ -43,7 +43,7 @@ while True:
     frame2 = img_to_array(frame2)
     frame2 = np.array(frame2, dtype="float32") / 255
     # generating a prdiction of the frame  
-#    y_pred = model.predict_classes(frame2[None,:,:,:])
+    #y_pred = model.predict_classes(frame2[None,:,:,:])
     
     y_pred = top_model.predict_classes(model.predict(frame2[None,:,:,:]))
     

@@ -1,5 +1,7 @@
 # A Homemade Teachable Machine
 
+[Demo](https://youtu.be/4G_cuvfPGxA)
+
 A Program that can be trained to recognize images captured by a webcam.
 
 For example:

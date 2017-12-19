@@ -114,7 +114,7 @@ validation_data = np.load('bottleneck_features_validation.npy')
 top_model = Sequential()
 top_model.add(Flatten(input_shape=train_data.shape[1:]))
 top_model.add(Dense(256, activation='relu'))
-top_model.add(Dropout(0.5))
+top_model.add(Dropout(0.6))
 top_model.add(Dense(NUM_CLASSES, activation='sigmoid'))
 
 top_model.compile(optimizer='rmsprop',
@@ -128,7 +128,7 @@ model_info = top_model.fit(
         epochs=EPOCHS,
         validation_data=(validation_data, y_test),
         shuffle=True,
-        verbose=0)
+        verbose=3)
 end = time.time()
 
 print ("\nModel training time: %0.1fs\n" % (end - start))

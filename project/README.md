@@ -1,7 +1,5 @@
 # A Homemade Teachable Machine
 
-[Demo](https://youtu.be/4G_cuvfPGxA)
-
 A Program that can be trained to recognize images captured by a webcam.
 
 For example:
@@ -17,6 +15,8 @@ To collect training data, the program captures a few seconds of video in which t
 For example, to train a classifier for smiling vs. frowning vs. silly faces - the user captures a few seconds of video of each pose. Then, the program extract frames from the video, use them to train an image classification model and begin using it to classify images it receives from the webcam.
 
 Inspired by https://teachablemachine.withgoogle.com/
+
+**[Demo](https://youtu.be/4G_cuvfPGxA)**
 
 ## Getting Started
 

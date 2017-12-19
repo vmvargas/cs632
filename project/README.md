@@ -12,7 +12,7 @@ The program does not know what types of images it has been trained to recognize 
 
 To collect training data, the program captures a few seconds of video in which the user demonstrates each scene they want to recognize.
 
-For example, to train a classifier for smiling vs. frowning vs. silly faces - the user captures a few seconds of video of each pose. Then, the program extract frames from the video, use them to train an image classification model, and begin using it to classify images it receives from the webcam.
+For example, to train a classifier for smiling vs. frowning vs. silly faces - the user captures a few seconds of video of each pose. Then, the program extract frames from the video, use them to train an image classification model and begin using it to classify images it receives from the webcam.
 
 Inspired by https://teachablemachine.withgoogle.com/
 
@@ -63,13 +63,13 @@ Execute ```$ python train-crappy-model.py``` to train this model.
 
 You can also find the model saved here: ```saved_models/crappy_model.h5```.
 
-Nowadays, the right tool for an image classification job is a convnet, so I tried to train one simple to start. Since I only have few examples, my first concern was overfitting or memorizing the data.
+Nowadays, the right tool for an image classification job is a CNN, so I tried to train one simple to start. Since I only have few examples, my first concern was overfitting or memorizing the data.
 
 My main focus for degrading overfitting was how much information my model was allowed to store, because, a model that can only store a few features will have to focus on the most significant features found in the data, and these are more likely to be truly relevant and to generalize better.
 
 That is why this model consists of a simple stack of 3 convolution layers with a ReLU activation, followed by max-pooling layers. On top of it, I ended the model with a single unit and a sigmoid activation.
 
-For a dataset of 150 images, with EPOCHS = 15 and BATCH_SIZE = 15, this convnet gave me a validation accuracy between 75-95% in less than 1 minute of training on CPU.
+For a dataset of 150 images, with EPOCHS = 15 and BATCH_SIZE = 15, this CNN gave me a validation accuracy between 75-95% in less than 1 minute of training on CPU.
 
 EPOCHS value was picked arbitrarily because the model is small and uses aggressive dropout, it does not seem to be overfitting too much at that point.
 
@@ -79,7 +79,7 @@ EPOCHS value was picked arbitrarily because the model is small and uses aggressi
 
 - A way to accentuate the entropic capacity of the model to generalize better is the use of weight regularization or "weight decay" to force model weights to taker smaller values.
 
-- Variance of the validation accuracy is quite high because accuracy is a high-variance metric but mainly because I only used 38 validation samples. A good validation strategy in these cases could be k-fold cross-validation, but this would require training k models for every evaluation round.
+- The variance of the validation accuracy is quite high because accuracy is a high-variance metric but mainly because I only used 38 validation samples. A good validation strategy in these cases could be k-fold cross-validation, but this would require training k models for every evaluation round.
 
 #### 2.2 A pre-trained VGG16 CNN
 
@@ -116,6 +116,8 @@ Validation accuracy was great due to the fact that the base model was trained on
 
 - Using L1 and L2 regularization, a.k.a. weight decay (because of the same reason as the previous approach).
 
+- Training a linear classifier (e.g. SVM) on top of the bottleneck features. SVM is particularly good at drawing decision boundaries on a small dataset.
+
 ### 3. Classify Images
 
 Once a model is trained, execute ```$ python test.py``` to classify images from the webcam in real-time.
@@ -130,23 +132,46 @@ This script follows these steps:
 
 ## Considerations
 
-- Extract​ ​frames​
-- Input​ ​preprocessing
-- Transfer​ ​learning​
-- Underfitting​ ​vs.​ ​Overfitting​
-- Performance
-- User​ ​Interface​
+### Extract​ing frames
+
+Frames are extracted every time the user presses the key 'r' and until the programs reach **50 frames**. I choose this number arbitrarily because I want the program to learn only one label per sequence of frames, thus I make sure that these frames were somehow different yet highly correlated.
+
+This program takes the image as it is recorded by the webcam - a 640x480px color picture - and save it in the corresponding folder.
+
+The program treats the output of the webcam as a collection of independent images.
+
+### Input​ ​preprocessing
+
+Training, validation and testing dataset were preprocessed in the same way.
+
+Considering the tiny amount of data I had, each frame was downsized to **150x150 px**. I started using half of this size and still got a good accuracy but I wanted the model to be a bit sensitive to subtle changes among labels such as the different facial expression case.
+
+### Transfer​ ​learning​
+
+I trained two models to evaluate the difference between a model from scratch vs transfer learning on top of a pre-train model.
+
+I previously explain both procedures. Now, I'll highlight some considerations:
+
+- I expect my dataset won't represents very specific domain features, like medical images or Chinese handwritten characters. If that were the case. I should definitely prefer the CNN from scratch.
+
+- Taking the output of the intermediate layer prior to the fully connected layers as features (bottleneck features) of a pre-trained model (VGG16 in this case) and then training a small fully-connected model on top of the stored feature will take advantage of the knowledge gained by the pre-trained network (like curves and edges) combine with the fine-tune of my own fully-connected classifier at the end to customize the output.
+
+### Underfitting​ ​vs.​ ​Overfitting​
+
+Training a CNN on a small dataset (one that is smaller than the number of parameters) greatly affects the CNN ability to generalize, often result in overfitting. That is why fine-tuning existing networks that are trained on a large dataset like the ImageNet (1.2M labeled images) yield to better accuracy and generalization.
+
+Also due to the fact that my dataset is not drastically different in context to the original dataset (ImageNet), the pre-trained model has already learned features that are relevant to our own classification problem.
 
 ## Built With
 
-* tensorflow 1.3
-* keras 2
-* opencv 3
-* pil
-* gtts
-* pygame
-* sklearn
-* numpy
-* matplotlib
-* imutils
-* pandas
+- tensorflow 1.3
+- keras 2
+- opencv 3
+- pil
+- gtts
+- pygame
+- sklearn
+- numpy
+- matplotlib
+- imutils
+- pandas

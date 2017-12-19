@@ -101,9 +101,11 @@ def save_bottlebeck_features():
     
     bottleneck_features_validation  = model.predict(X_test, verbose=1)
     np.save('bottleneck_features_validation.npy', bottleneck_features_validation)
-#save_bottlebeck_features()
+
 
 print("[INFO] training the top of the model...")
+
+#save_bottlebeck_features()
 
 train_data = np.load('bottleneck_features_train.npy')
 validation_data = np.load('bottleneck_features_validation.npy')
